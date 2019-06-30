@@ -1,18 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenQA.Selenium.Chrome;
 
 namespace ClientScrapper.App
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-			var crawler = new SimpleCrawler("http://google.com", new Logger(), new ClientCrawlerConfiguration());
-			crawler.Start();
-		}
-		
+            const string starterUrl = "http://google.com";
+            const int errorThreshold = 10;
+            const int maxThread = 10;
+
+            // create new instance of Logger logic
+            var logger = new Logger();
+
+            // configure chrome driver
+            var chromeDriverConfiguration = new ChromeOptions();
+            chromeDriverConfiguration.AddArgument("headless");
+
+            // client crawler configuration
+            var clientCrawlerConfiguration =
+                new ClientCrawlerConfiguration(chromeDriverConfiguration, errorThreshold, maxThread);
+
+            // new instance of ClientCrawler
+            var crawler = new SimpleCrawler(starterUrl, logger, clientCrawlerConfiguration);
+
+            // start crawling
+            crawler.Start();
+        }
     }
 }
